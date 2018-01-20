@@ -784,7 +784,7 @@ Turf and target are seperate in case you want to teleport some distance from a t
 
 	return 1
 
-/proc/do_after(mob/user, delay, numticks = 5, needhand = 1, atom/target = null)
+/proc/do_after(mob/user, delay, numticks = 5, needhand = 1, atom/target = null, progress = 1)
 	if(!user)
 		return 0
 
@@ -802,8 +802,16 @@ Turf and target are seperate in case you want to teleport some distance from a t
 	if(holding)
 		holdingnull = 0 //User is holding a tool of some kind
 
+	var/datum/progressbar/progbar
+	if (progress)
+		progbar = new(user, delay, target)
+
 	for(var/i = 0, i<numticks, i++)
 		sleep(delayfraction)
+
+		if (progress)
+			progbar.update(i*delayfraction)
+
 		if(!user || user.stat || user.weakened || user.stunned  || !(user.loc == Uloc))
 			return 0
 
@@ -818,6 +826,9 @@ Turf and target are seperate in case you want to teleport some distance from a t
 					return 0
 			if(user.get_active_hand() != holding)
 				return 0
+
+	if (progress)
+		qdel(progbar)
 
 	return 1
 

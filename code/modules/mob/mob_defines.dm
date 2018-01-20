@@ -160,3 +160,5 @@
 	var/footstep = 1 //Used for steps sound
 
 	var/willfully_dreaming = 0 // For "sleep" verb
+
+	var/list/progressbars = list()	//for stacking do_after bars
